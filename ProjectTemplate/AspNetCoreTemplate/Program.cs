@@ -15,6 +15,7 @@ namespace AspNetCoreTemplate
     {
         public static void Main(string[] args)
         {
+
             var logger = NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
             try
             {
