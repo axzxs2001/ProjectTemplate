@@ -5,13 +5,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCoreTemplate.Models;
+using Microsoft.Extensions.Logging;
 
 namespace AspNetCoreTemplate.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger<HomeController> _logger;
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="logger">日志对象</param>
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+
         public IActionResult Index()
         {
+            _logger.LogInformation("Home下的Index");
             return View();
         }
 
