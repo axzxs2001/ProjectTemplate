@@ -13,10 +13,10 @@ namespace AspNetCoreTemplate.Controllers
     public class HomeController : Controller
     {
 
-      
+
 
         /// <summary>
-        /// 日志对象
+        /// 【3NLog】日志对象
         /// </summary>
         private readonly ILogger<HomeController> _logger;
         /// <summary>
@@ -25,9 +25,9 @@ namespace AspNetCoreTemplate.Controllers
         /// <param name="logger">日志对象</param>
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
-            //日志对象
+            //【3NLog】日志对象
             _logger = logger;
-            //连接字符串
+            //【1数据库连接字符串】连接字符串
             var connectionString1 = configuration.GetConnectionString("ConnectionString1");
         }
 

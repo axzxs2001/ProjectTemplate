@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace AspNetCoreTemplate
 {
@@ -20,11 +22,22 @@ namespace AspNetCoreTemplate
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //数据库连接字符串读取方式
+            //【1数据库连接字符串】数据库连接字符串读取方式
             var connectionString1 = Configuration.GetConnectionString("ConnectionString1");
             var connectionString2 = Configuration.GetConnectionString("ConnectionString2");
 
-
+            //【2固定角色Cookie验证】 注入验证 2.0
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;     
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, m =>
+            {
+                m.LoginPath = new PathString("/login");
+                m.AccessDeniedPath = new PathString("/home/error");
+                m.LogoutPath = new PathString("/logout");
+                m.Cookie.Path = "/";
+            });
 
 
             services.AddMvc();
@@ -44,7 +57,8 @@ namespace AspNetCoreTemplate
             }
 
             app.UseStaticFiles();
-
+            //【2固定角色Cookie验证】
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
