@@ -18,13 +18,19 @@ namespace AspNetCoreTemplate
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //数据库连接字符串读取方式
+            var connectionString1 = Configuration.GetConnectionString("ConnectionString1");
+            var connectionString2 = Configuration.GetConnectionString("ConnectionString2");
+
+
+
+
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
