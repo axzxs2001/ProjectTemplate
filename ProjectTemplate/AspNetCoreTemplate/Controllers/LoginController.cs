@@ -7,11 +7,25 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using AspNetCoreTemplate.Models.Repository;
 
 namespace AspNetCoreTemplate.Controllers
 {
     public class LoginController : Controller
     {
+        /// <summary>
+        /// 用户仓储接口
+        /// </summary>
+        IUserRespository _userRepository;
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="userRepository">用户仓储</param>
+        public LoginController(IUserRespository userRepository)
+        {
+            //用户仓储
+            _userRepository = userRepository;
+        }
         [Authorize("admin")]
         public IActionResult ABC()
         {
@@ -50,11 +64,11 @@ namespace AspNetCoreTemplate.Controllers
         public IActionResult Login(string userName, string password, string returnUrl)
         {
             //查询users
-            dynamic user = null;// _userResitory.Login(userName, password);
+            dynamic user = _userRepository.Login(userName, password);
             if (user != null)
             {
                 //查询角色名称
-                dynamic roleName = "admin";// _roleResitory.GetRole(user.RoleID).RoleName;
+                dynamic roleName = _userRepository.GetRole(user.RoleID).RoleName;
 
                 var claims = new Claim[]
                 {
@@ -65,15 +79,8 @@ namespace AspNetCoreTemplate.Controllers
                  };
                 HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(new ClaimsIdentity(claims)));
-                //雇员直接导航到我的工作，节省一点点击跳转
-                if (roleName == "Employee")
-                {
-                    return new RedirectResult("myworks");
-                }
-                else
-                {
-                    return new RedirectResult(returnUrl == null ? "/home/index" : returnUrl);
-                }
+                return new RedirectResult(returnUrl == null ? "/home/index" : returnUrl);
+
             }
             else
             {

@@ -7,14 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using AspNetCoreTemplate.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using AspNetCoreTemplate.Models.Repository;
 
 namespace AspNetCoreTemplate.Controllers
 {
     public class HomeController : Controller
     {
-
-
-
         /// <summary>
         /// 【3NLog】日志对象
         /// </summary>
@@ -23,12 +21,12 @@ namespace AspNetCoreTemplate.Controllers
         /// 构造
         /// </summary>
         /// <param name="logger">日志对象</param>
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
+
+        public HomeController(ILogger<HomeController> logger)
         {
             //【3NLog】日志对象
             _logger = logger;
-            //【1数据库连接字符串】连接字符串
-            var connectionString1 = configuration.GetConnectionString("ConnectionString1");
+         
         }
 
         public IActionResult Index()
