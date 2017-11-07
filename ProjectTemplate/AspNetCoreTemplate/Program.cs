@@ -15,7 +15,7 @@ namespace AspNetCoreTemplate
     {
         public static void Main(string[] args)
         {
-
+            //【3NLog】日志对象
             var logger = NLogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
             try
             {
@@ -34,7 +34,7 @@ namespace AspNetCoreTemplate
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseNLog()
+                .UseNLog()//【3NLog】添加日志中间件
                 .Build();
     }
 }
