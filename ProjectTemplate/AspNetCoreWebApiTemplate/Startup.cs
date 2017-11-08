@@ -11,6 +11,12 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AuthorizePolicy.JWT;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AspNetCoreWebApiTemplate
 {
@@ -26,6 +32,10 @@ namespace AspNetCoreWebApiTemplate
 
         public void ConfigureServices(IServiceCollection services)
         {
+            #region 【添加JWT验证】
+            AddAuthorization(services);
+            #endregion
+
             services.AddMvc();
 
             #region 【1 Swagger注入】
@@ -73,6 +83,81 @@ namespace AspNetCoreWebApiTemplate
                 c.InjectOnCompleteJavaScript("/swagger-ui/custom.js");
             });
             #endregion
+        }
+
+        /// <summary>
+        /// 添加JWT自定义策略
+        /// </summary>
+        /// <param name="services"></param>
+        void AddAuthorization(IServiceCollection services)
+        {
+            //读取配置文件
+            var audienceConfig = Configuration.GetSection("Audience");
+            var symmetricKeyAsBase64 = audienceConfig["Secret"];
+            var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
+            var signingKey = new SymmetricSecurityKey(keyByteArray);
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+                ValidateIssuer = true,
+                ValidIssuer = audienceConfig["Issuer"],//发行人
+                ValidateAudience = true,
+                ValidAudience = audienceConfig["Audience"],//订阅人
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = true,
+
+            };
+            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            //这个集合模拟用户权限表,可从数据库中查询出来
+            var permission = new List<Permission> {
+                              new Permission {  Url="/", Name="admin"},
+                              new Permission {  Url="/api/values", Name="admin"},
+                              new Permission {  Url="/", Name="system"},
+                              new Permission {  Url="/api/values1", Name="system"}
+                          };
+            //如果第三个参数，是ClaimTypes.Role，上面集合的每个元素的Name为角色名称，如果ClaimTypes.Name，即上面集合的每个元素的Name为用户名
+            var permissionRequirement = new PermissionRequirement(
+                "/api/denied", permission,
+                ClaimTypes.Role,
+                audienceConfig["Issuer"],
+                audienceConfig["Audience"],
+                signingCredentials,
+                expiration: TimeSpan.FromSeconds(10)
+                );
+            services.AddAuthorization(options =>
+            {
+
+                options.AddPolicy("Permission",
+                          policy => policy.Requirements.Add(permissionRequirement));
+
+            }).AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                //不使用https
+                o.RequireHttpsMetadata = false;
+                o.TokenValidationParameters = tokenValidationParameters;
+                o.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        if (context.Request.Path.Value.ToString() == "/api/logout")
+                        {
+                            var token = ((context as TokenValidatedContext).SecurityToken as JwtSecurityToken).RawData;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            //注入授权Handler
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            services.AddSingleton(permissionRequirement);
         }
     }
 }
