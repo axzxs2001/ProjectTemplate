@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreTemplate", "AspNetCoreTemplate\AspNetCoreTemplate.csproj", "{F09680EC-2C50-4B93-A046-F9D06DBF774A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "开发规范", "开发规范", "{38CCC254-FB74-4149-8770-20ABAC457981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreWebApiTemplate", "AspNetCoreWebApiTemplate\AspNetCoreWebApiTemplate.csproj", "{2085F4D3-5112-49AF-9252-61D58A463E55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreWebApiTemplate", "AspNetCoreWebApiTemplate\AspNetCoreWebApiTemplate.csproj", "{2085F4D3-5112-49AF-9252-61D58A463E55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermissionsTemplate", "PermissionsTemplate\PermissionsTemplate.csproj", "{D3634147-F80E-4BBA-86F7-EB83493A78EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{2085F4D3-5112-49AF-9252-61D58A463E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2085F4D3-5112-49AF-9252-61D58A463E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2085F4D3-5112-49AF-9252-61D58A463E55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
