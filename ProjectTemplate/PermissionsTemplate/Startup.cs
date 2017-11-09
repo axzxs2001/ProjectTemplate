@@ -8,6 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PermissionsTemplate.Models.DataModels;
 using Microsoft.EntityFrameworkCore;
+using AuthorizePolicy;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using PermissionsTemplate.Models.Repository;
 
 namespace PermissionsTemplate
 {
@@ -23,11 +29,6 @@ namespace PermissionsTemplate
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //从配置文件获取连接字符串
-            var permissionConnectionString = Configuration.GetConnectionString("PermissionConnectionString");
-            //注入EF实体
-            services.AddDbContextPool<PermissionsDBContext>(opt => opt.UseSqlServer(permissionConnectionString));
-
 
             services.AddMvc();
         }
@@ -53,6 +54,28 @@ namespace PermissionsTemplate
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        void AddAuthorization(IServiceCollection services)
+        {
+            #region 自定义策略Cookie验证
+            services.AddAuthorization(options =>
+            {
+                //从数据库中查询出来
+                var permission = new PermissionRepository(Configuration).GetRolePermissons();
+                //如果第三个参数，是ClaimTypes.Role，上面集合的每个元素的Name为角色名称，如果ClaimTypes.Name，即上面集合的每个元素的Name为用户名
+                var permissionRequirement = new PermissionRequirement("/denied", permission, ClaimTypes.Role);
+                options.AddPolicy("Permission",
+                          policy => policy.Requirements.Add(permissionRequirement));
+            }).AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = new PathString("/login");
+                options.AccessDeniedPath = new PathString("/denied");
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(20);
+            });
+            //注入授权Handler
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            #endregion
         }
     }
 }
