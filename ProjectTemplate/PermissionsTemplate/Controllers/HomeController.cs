@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PermissionsTemplate.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PermissionsTemplate.Controllers
 {
+     [Authorize(Policy = "Permission")]
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -18,7 +20,6 @@ namespace PermissionsTemplate.Controllers
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 

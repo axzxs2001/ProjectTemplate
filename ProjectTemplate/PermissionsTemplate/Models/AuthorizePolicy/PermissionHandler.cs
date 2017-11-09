@@ -33,7 +33,7 @@ namespace PermissionsTemplate
                 {
                     var name = httpContext.User.Claims.SingleOrDefault(s => s.Type == requirement.ClaimType).Value;                   
                     //验证权限
-                    if (Permissions.Where(w => w.RoleName == name && w.Action.ToLower() == questUrl).Count() > 0)
+                    if (Permissions.Where(w => w.RoleName == name && w.Action.ToLower() == questUrl&&w.Method== httpContext.Request.Method.ToLower()).Count() > 0)
                     {
                         context.Succeed(requirement);
                     }

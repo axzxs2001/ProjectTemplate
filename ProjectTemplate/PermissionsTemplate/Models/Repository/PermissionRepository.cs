@@ -10,13 +10,17 @@ using Microsoft.Extensions.Configuration;
 
 namespace PermissionsTemplate.Models.Repository
 {
-    public class PermissionRepository
+    public class PermissionRepository:IPermissionRepository
     {
         string _permissionConnectionString;
         public PermissionRepository(IConfiguration configuration)
         {
             _permissionConnectionString = configuration.GetConnectionString("PermissionConnectionString");
         }
+        /// <summary>
+        /// 获取角色权限
+        /// </summary>
+        /// <returns></returns>
         public List<Permission> GetRolePermissons()
         {
             using (var con = new SqlConnection(_permissionConnectionString))

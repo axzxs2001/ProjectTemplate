@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PermissionsTemplate.Models.DataModels;
 using Microsoft.EntityFrameworkCore;
-using AuthorizePolicy;
+
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +29,8 @@ namespace PermissionsTemplate
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            AddRepository(services);
+            AddAuthorization(services);
             services.AddMvc();
         }
 
@@ -47,13 +48,19 @@ namespace PermissionsTemplate
             }
 
             app.UseStaticFiles();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        void AddRepository(IServiceCollection services)
+        {
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IUserRespository, UserRespository>();
         }
 
         void AddAuthorization(IServiceCollection services)
