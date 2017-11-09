@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "开发规范", "开发规�
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreWebApiTemplate", "AspNetCoreWebApiTemplate\AspNetCoreWebApiTemplate.csproj", "{2085F4D3-5112-49AF-9252-61D58A463E55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermissionsTemplate", "PermissionsTemplate\PermissionsTemplate.csproj", "{D3634147-F80E-4BBA-86F7-EB83493A78EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermissionsTemplate", "PermissionsTemplate\PermissionsTemplate.csproj", "{20F9EFB5-2343-49A7-BCA0-2EFEA0A4950E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{2085F4D3-5112-49AF-9252-61D58A463E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2085F4D3-5112-49AF-9252-61D58A463E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2085F4D3-5112-49AF-9252-61D58A463E55}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3634147-F80E-4BBA-86F7-EB83493A78EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20F9EFB5-2343-49A7-BCA0-2EFEA0A4950E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20F9EFB5-2343-49A7-BCA0-2EFEA0A4950E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20F9EFB5-2343-49A7-BCA0-2EFEA0A4950E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20F9EFB5-2343-49A7-BCA0-2EFEA0A4950E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
