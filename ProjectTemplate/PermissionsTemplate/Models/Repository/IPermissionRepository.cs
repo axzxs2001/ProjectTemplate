@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace PermissionsTemplate.Models.Repository
 {
+    /// <summary>
+    /// 权限仓储接口
+    /// </summary>
     public interface IPermissionRepository
     {
         /// <summary>

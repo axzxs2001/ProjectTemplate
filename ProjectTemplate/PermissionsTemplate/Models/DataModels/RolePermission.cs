@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PermissionsTemplate.Models.DataModels
 {
     /// <summary>
-    /// 权限
+    /// 角色权限
     /// </summary>
-    public class Permission
+    public class RolePermission
     {
+        /// <summary>
+        /// 角色ID
+        /// </summary>
+        public int RoleID { get; set; }
+        /// <summary>
+        /// 角色名称
+        /// </summary>
+        public string RoleName { get; set; }
         /// <summary>
         /// 权限ID
         /// </summary>
-        public int ID { get; set; }
+        public int PermissionID { get; set; }
         /// <summary>
         /// 权限名称
         /// </summary>

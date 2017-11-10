@@ -33,6 +33,20 @@ namespace PermissionsTemplate.Models.Repository
             }
         }
         /// <summary>
+        /// 获取全部角色权限
+        /// </summary>
+        /// <returns></returns>
+        public List<RolePermission> GetRolePermissions()
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<RolePermission>(
+                    $@"select * from roles join rolepermissions
+                    on roles.id=rolepermissions.roleid 
+                    join permissions on permissions.id=rolepermissions.permissionid").ToList();
+            }
+        }
+        /// <summary>
         /// 添加角色
         /// </summary>
         /// <param name="roleName">角色名称</param>
@@ -43,7 +57,7 @@ namespace PermissionsTemplate.Models.Repository
             {
                 return con.Execute(
                     $@"insert into roles(rolename) values(@rolename)",
-                    new { rolename=roleName }
+                    new { rolename = roleName }
                     ) > 0;
             }
         }
@@ -53,13 +67,13 @@ namespace PermissionsTemplate.Models.Repository
         /// </summary>
         /// <param name="role">角色</param>
         /// <returns></returns>
-        public bool ModifyRole(Role  role)
+        public bool ModifyRole(Role role)
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
                 return con.Execute(
                     $@"update roles set rolename=@rolename where id=@id",
-                    new { rolename =role.RoleName,id=role.Id}
+                    new { rolename = role.RoleName, id = role.ID }
                     ) > 0;
             }
         }
@@ -74,7 +88,7 @@ namespace PermissionsTemplate.Models.Repository
             {
                 return con.Execute(
                     $@"delete roles where id=@id",
-                    new {id = roleID }
+                    new { id = roleID }
                     ) > 0;
             }
         }

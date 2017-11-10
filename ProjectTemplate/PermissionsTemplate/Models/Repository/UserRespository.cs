@@ -9,6 +9,9 @@ using Dapper;
 
 namespace PermissionsTemplate.Models.Repository
 {
+    /// <summary>
+    /// 用户仓储类
+    /// </summary>
     public class UserRespository : IUserRespository
     {
         string _permissionConnectionString;
@@ -51,6 +54,51 @@ namespace PermissionsTemplate.Models.Repository
                 return con.Execute(
                     $@"insert into userroles(roleid,userid) values(@roleid,@userid)",
                     new { roleid = roleID, userid = userID }
+                    ) > 0;
+            }
+        }
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <param name="user">用户</param>
+        /// <returns></returns>
+        public bool AddUser(User user)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Execute(
+                    $@"insert into users([name],username,password) values(@name,@username,@password)",
+                    new { name=user.Name, username=user.UserName, password=user.Password}
+                    ) > 0;
+            }
+        }
+        /// <summary>
+        /// 修改用户
+        /// </summary>
+        /// <param name="user">用户</param>
+        /// <returns></returns>
+        public bool ModifyUser(User user)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Execute(
+                    $@"update users set [name]=@name,username=@username,password=@password where id=@id",
+                    new {id=user.ID,name = user.Name, username = user.UserName, password = user.Password }
+                    ) > 0;
+            }
+        }
+        /// <summary>
+        /// 移除用户
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        public bool RemoveUser(int userID)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Execute(
+                    $@"delete users where id=@id",
+                    new { id = userID}
                     ) > 0;
             }
         }

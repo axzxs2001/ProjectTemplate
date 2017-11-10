@@ -3,10 +3,18 @@ using System.Collections.Generic;
 
 namespace PermissionsTemplate.Models.DataModels
 {
-    public partial class Role
+    /// <summary>
+    /// 角色
+    /// </summary>
+    public class Role
     {
-     
-        public int Id { get; set; }
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public int ID { get; set; }
+        /// <summary>
+        /// 角色名称
+        /// </summary>
         public string RoleName { get; set; }
 
     }
