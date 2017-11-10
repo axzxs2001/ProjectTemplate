@@ -47,6 +47,21 @@ namespace PermissionsTemplate.Models.Repository
             }
         }
         /// <summary>
+        /// 根据角色ID获取角色权限
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <returns></returns>
+        public List<RolePermission> GetRolePermissionsByRoleID(int roleID)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<RolePermission>(
+                    $@"select * from roles join rolepermissions
+                    on roles.id=rolepermissions.roleid 
+                    join permissions on permissions.id=rolepermissions.permissionid where roleid=@roleid",new { roleid=roleID}).ToList();
+            }
+        }
+        /// <summary>
         /// 添加角色
         /// </summary>
         /// <param name="roleName">角色名称</param>

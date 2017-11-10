@@ -27,7 +27,12 @@ namespace PermissionsTemplate.Models.Repository
         /// </summary>
         /// <returns></returns>
         List<RolePermission> GetRolePermissions();
-
+        /// <summary>
+        /// 根据角色ID获取角色权限
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <returns></returns>
+        List<RolePermission> GetRolePermissionsByRoleID(int roleID);
         /// <summary>
         /// 添加角色
         /// </summary>
