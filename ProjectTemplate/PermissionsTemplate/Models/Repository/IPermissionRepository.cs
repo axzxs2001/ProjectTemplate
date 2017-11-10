@@ -19,7 +19,27 @@ namespace PermissionsTemplate.Models.Repository
         /// 获取角色权限
         /// </summary>
         /// <returns></returns>
-        List<AuthorizePermission> GetRolePermissons();
+        List<AuthorizePermission> GetRolePermissions();
+
+        /// <summary>
+        /// 添加权限
+        /// </summary>
+        /// <param name="permission">权限</param>
+        /// <returns></returns>
+         bool AddPermission(Permission permission);
+        /// <summary>
+        /// 修改权限
+        /// </summary>
+        /// <param name="permission">权限</param>
+        /// <returns></returns>
+        bool ModifyPermission(Permission permission);
+    
+        /// <summary>
+        /// 修改权限
+        /// </summary>
+        /// <param name="permission">权限</param>
+        /// <returns></returns>
+         bool RemovePermission(int permissionID);
 
     }
 }

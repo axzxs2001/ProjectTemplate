@@ -69,7 +69,7 @@ namespace PermissionsTemplate
             services.AddAuthorization(options =>
             {
                 //从数据库中查询出来
-                var permission = new PermissionRepository(Configuration).GetRolePermissons();
+                var permission = new PermissionRepository(Configuration).GetRolePermissions();
                 //如果第三个参数，是ClaimTypes.Role，上面集合的每个元素的Name为角色名称，如果ClaimTypes.Name，即上面集合的每个元素的Name为用户名
                 var permissionRequirement = new PermissionRequirement("/denied", permission, ClaimTypes.Role);
                 options.AddPolicy("Permission",

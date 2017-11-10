@@ -25,22 +25,14 @@ namespace PermissionsTemplate.Models.Repository
         /// <param name="userName">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        public User Login(string userName, string password)
+        public UserRole Login(string userName, string password)
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
-                return con.QuerySingle<User>($@"select users.*,roles.RoleName from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where users.UserName=@username and users.password=@password", new { username = userName, password = password });
+                return con.QuerySingle<UserRole>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,user.name,user.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where users.UserName=@username and users.password=@password", new { username = userName, password = password });
             }
         }
-        /// <summary>
-        /// 按用户ID获取角色
-        /// </summary>
-        /// <param name="userID">用户ID</param>
-        /// <returns></returns>
-        public Role GetRole(int userID)
-        {
-            return null;
-        }
+     
         /// <summary>
         /// 添加用户角色表
         /// </summary>
@@ -57,6 +49,20 @@ namespace PermissionsTemplate.Models.Repository
                     ) > 0;
             }
         }
+        /// <summary>
+        /// 按用户ID查询角色
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        public List<UserRole> GetUserRole(int userID)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<UserRole>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,user.name,user.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where UserRoles.userid=@userid", new { userid = userID }).ToList();
+            }
+        }
+
+
         /// <summary>
         /// 添加用户
         /// </summary>

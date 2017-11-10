@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using AuthorizePolicy;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AspNetCoreTemplate
 {

@@ -50,7 +50,7 @@ namespace PermissionsTemplate.Controllers
                 identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
                 identity.AddClaim(new Claim(ClaimTypes.Role, user.RoleName));
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier,user.UserName));
-                identity.AddClaim(new Claim(ClaimTypes.Sid, user.ID.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Sid, user.UserID.ToString()));
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 if (returnUrl == null)
                 {
