@@ -4,7 +4,7 @@ namespace PermissionsTemplate
     /// <summary>
     /// 用户或角色或其他凭据实体
     /// </summary>
-    public class Permission
+    public class AuthorizePermission
     {
         /// <summary>
         /// 用户或角色或其他凭据名称

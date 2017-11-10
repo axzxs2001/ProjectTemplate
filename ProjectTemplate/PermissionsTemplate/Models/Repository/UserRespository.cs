@@ -22,11 +22,11 @@ namespace PermissionsTemplate.Models.Repository
         /// <param name="userName">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        public Users Login(string userName, string password)
+        public User Login(string userName, string password)
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
-                return con.QuerySingle<Users>($@"select users.*,roles.RoleName from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where users.UserName=@username and users.password=@password", new { username = userName, password = password });
+                return con.QuerySingle<User>($@"select users.*,roles.RoleName from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where users.UserName=@username and users.password=@password", new { username = userName, password = password });
             }
         }
         /// <summary>
@@ -34,9 +34,25 @@ namespace PermissionsTemplate.Models.Repository
         /// </summary>
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
-        public Roles GetRole(int userID)
+        public Role GetRole(int userID)
         {
             return null;
+        }
+        /// <summary>
+        /// 添加用户角色表
+        /// </summary>
+        /// <param name="userID">用ID</param>
+        /// <param name="roleID">角色ID</param>
+        /// <returns></returns>
+        public bool AddUserRole(int userID, int roleID)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Execute(
+                    $@"insert into userroles(roleid,userid) values(@roleid,@userid)",
+                    new { roleid = roleID, userid = userID }
+                    ) > 0;
+            }
         }
     }
 }

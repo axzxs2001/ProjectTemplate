@@ -16,6 +16,7 @@ namespace PermissionsTemplate.Models.Repository
         /// 获取角色权限
         /// </summary>
         /// <returns></returns>
-        List<Permission> GetRolePermissons();
+        List<AuthorizePermission> GetRolePermissons();
+
     }
 }

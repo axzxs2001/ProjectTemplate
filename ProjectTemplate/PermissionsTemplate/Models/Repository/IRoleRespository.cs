@@ -1,0 +1,26 @@
+﻿using Microsoft.Extensions.Configuration;
+using PermissionsTemplate.Models.DataModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using Dapper;
+
+namespace PermissionsTemplate.Models.Repository
+{
+    /// <summary>
+    /// 角色接口
+    /// </summary>
+    public interface IRoleRespository
+    {
+        /// <summary>
+        /// 添加角色要权限表
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <param name="permissionID">权限ID</param>
+        /// <returns></returns>
+        bool AddRolePermission(int roleID, int permissionID);
+
+    }
+}

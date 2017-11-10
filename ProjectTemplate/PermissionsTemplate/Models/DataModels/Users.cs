@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PermissionsTemplate.Models.DataModels
 {
-    public partial class Users
+    public partial class User
     {
       
 

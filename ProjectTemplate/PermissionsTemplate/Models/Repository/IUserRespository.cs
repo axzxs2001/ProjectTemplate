@@ -17,12 +17,20 @@ namespace PermissionsTemplate.Models.Repository
         /// <param name="userName">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        Users Login(string userName, string password);
+        User Login(string userName, string password);
         /// <summary>
         /// 按用户ID获取角色
         /// </summary>
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
-        Roles GetRole(int userID);
+        Role GetRole(int userID);
+
+        /// <summary>
+        /// 添加用户角色表
+        /// </summary>
+        /// <param name="userID">用ID</param>
+        /// <param name="roleID">角色ID</param>
+        /// <returns></returns>
+        bool AddUserRole(int userID, int roleID);
     }
 }

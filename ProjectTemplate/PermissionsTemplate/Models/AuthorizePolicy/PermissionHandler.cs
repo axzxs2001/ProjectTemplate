@@ -14,7 +14,7 @@ namespace PermissionsTemplate
         /// <summary>
         /// 用户权限
         /// </summary>
-        public List<Permission> Permissions { get; set; }
+        public List<AuthorizePermission> Permissions { get; set; }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {

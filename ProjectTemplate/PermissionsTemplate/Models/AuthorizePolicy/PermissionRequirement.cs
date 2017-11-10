@@ -11,7 +11,7 @@ namespace PermissionsTemplate
         /// <summary>
         /// 用户权限集合
         /// </summary>
-        public List<Permission> Permissions { get; private set; }
+        public List<AuthorizePermission> Permissions { get; private set; }
         /// <summary>
         /// 无权限action
         /// </summary>
@@ -26,7 +26,7 @@ namespace PermissionsTemplate
         /// </summary>
         /// <param name="deniedAction">无权限action</param>
         /// <param name="userPermissions">用户权限集合</param>
-        public PermissionRequirement(string deniedAction, List<Permission> permissions, string claimType)
+        public PermissionRequirement(string deniedAction, List<AuthorizePermission> permissions, string claimType)
         {
             ClaimType = claimType;
             DeniedAction = deniedAction;

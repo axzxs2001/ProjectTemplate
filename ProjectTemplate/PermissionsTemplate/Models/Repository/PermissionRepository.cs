@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace PermissionsTemplate.Models.Repository
 {
-    public class PermissionRepository:IPermissionRepository
+    public class PermissionRepository : IPermissionRepository
     {
         string _permissionConnectionString;
         public PermissionRepository(IConfiguration configuration)
@@ -21,15 +21,17 @@ namespace PermissionsTemplate.Models.Repository
         /// 获取角色权限
         /// </summary>
         /// <returns></returns>
-        public List<Permission> GetRolePermissons()
+        public List<AuthorizePermission> GetRolePermissons()
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
-                return con.Query<Permission>($@"select RoleName,Method,Action 
+                return con.Query<AuthorizePermission>($@"select RoleName,Method,Action 
                 from  dbo.Permissions INNER JOIN
                 dbo.RolePermissions ON dbo.Permissions.ID =dbo.RolePermissions.PermissionID INNER JOIN
-                dbo.Roles ON dbo.RolePermissions.RoleID = dbo.Roles.ID").ToList();    
+                dbo.Roles ON dbo.RolePermissions.RoleID = dbo.Roles.ID").ToList();
             }
         }
+
+
     }
 }

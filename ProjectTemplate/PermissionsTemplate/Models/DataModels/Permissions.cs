@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace PermissionsTemplate.Models.DataModels
 {
-    public partial class Permissions
-    {     
-
+    public partial class Permission
+    {   
         public int Id { get; set; }
         public string PermissionName { get; set; }
         public string Action { get; set; }
