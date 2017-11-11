@@ -54,14 +54,9 @@ namespace PermissionsTemplate.Controllers
                 return new JsonResult(new { result = 1, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings());
             }
         }
+       
 
-     
-        public IActionResult UserRole()
-        {
-            return View();
-        }
-
-        public IActionResult RolePermission()
+        public IActionResult UserPermission()
         {
             return View();
         }
