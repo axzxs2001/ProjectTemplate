@@ -46,6 +46,21 @@ namespace PermissionsTemplate.Models.Repository
                     join permissions on permissions.id=rolepermissions.permissionid").ToList();
             }
         }
+
+        /// <summary>
+        /// 获取全部角色
+        /// </summary>
+        /// <returns></returns>
+        public List<Role> GetAllRole()
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<Role>(
+                    $@"select * from roles").ToList();
+            }
+        }
+
+
         /// <summary>
         /// 根据角色ID获取角色权限
         /// </summary>

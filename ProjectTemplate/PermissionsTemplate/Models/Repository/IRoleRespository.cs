@@ -41,6 +41,12 @@ namespace PermissionsTemplate.Models.Repository
         bool AddRole(string roleName);
 
         /// <summary>
+        /// 获取全部角色
+        /// </summary>
+        /// <returns></returns>
+        List<Role> GetAllRole();
+
+        /// <summary>
         /// 修改角色
         /// </summary>
         /// <param name="role">角色</param>

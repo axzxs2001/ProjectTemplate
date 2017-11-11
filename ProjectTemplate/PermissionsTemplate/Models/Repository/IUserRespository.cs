@@ -25,6 +25,19 @@ namespace PermissionsTemplate.Models.Repository
         /// <returns></returns>
         List<UserRole> GetUserRole(int userID);
 
+
+        /// <summary>
+        /// 查询全部用户
+        /// </summary>
+        /// <returns></returns>
+        List<User> GetAllUser();
+        /// <summary>
+        /// 按用户用户ID获取权限
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        List<UserRolePermission> GetUserPermissionByUserID(int userID);
+
         /// <summary>
         /// 添加用户角色表
         /// </summary>

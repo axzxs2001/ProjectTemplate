@@ -33,6 +33,18 @@ namespace PermissionsTemplate.Models.Repository
         }
 
         /// <summary>
+        /// 获取全部权限
+        /// </summary>
+        /// <returns></returns>
+        public List<Permission> GetAllPermission()
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<Permission>($@"select * from Permissions").ToList();
+            }
+        }
+
+        /// <summary>
         /// 添加权限
         /// </summary>
         /// <param name="permission">权限</param>
@@ -41,7 +53,7 @@ namespace PermissionsTemplate.Models.Repository
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
-                return con.Execute($@"insert into permissions(permissionname,action,method,pid,memo) values(@permissionname,@action,@method,@pid,@memo)"，new { permissionname=permission.PermissionName, action=permission.Action, method=permission.Memo, pid=permission.Pid, memo=permission.Memo })>0;
+                return con.Execute($@"insert into permissions(permissionname,action,method,pid,memo) values(@permissionname,@action,@method,@pid,@memo)",new { permissionname=permission.PermissionName, action=permission.Action, method=permission.Memo, pid=permission.Pid, memo=permission.Memo })>0;
             }
         }
         /// <summary>

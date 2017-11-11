@@ -61,6 +61,17 @@ namespace PermissionsTemplate.Models.Repository
                 return con.Query<UserRolePermission>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,user.name,user.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID join rolepermissions on roles.id=rolepermissions.roleid join permissions rolepermissions.permissionid=permissions.id where UserRoles.userid=@userid", new { userid = userID }).ToList();
             }
         }
+        /// <summary>
+        /// 查询全部用户
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetAllUser()
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<User>($@"select * from users").ToList();
+            }
+        }
 
         /// <summary>
         /// 按用户ID查询角色

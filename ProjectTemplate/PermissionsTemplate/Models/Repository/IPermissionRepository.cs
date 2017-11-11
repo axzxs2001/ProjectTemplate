@@ -22,6 +22,12 @@ namespace PermissionsTemplate.Models.Repository
         List<AuthorizePermission> GetRolePermissions();
 
         /// <summary>
+        /// 获取全部权限
+        /// </summary>
+        /// <returns></returns>
+        List<Permission> GetAllPermission();
+
+        /// <summary>
         /// 添加权限
         /// </summary>
         /// <param name="permission">权限</param>
