@@ -50,6 +50,19 @@ namespace PermissionsTemplate.Models.Repository
             }
         }
         /// <summary>
+        /// 按用户用户ID获取权限
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public List<UserRolePermission> GetUserPermissionByUserID(int userID)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                return con.Query<UserRolePermission>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,user.name,user.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID join rolepermissions on roles.id=rolepermissions.roleid join permissions rolepermissions.permissionid=permissions.id where UserRoles.userid=@userid", new { userid = userID }).ToList();
+            }
+        }
+
+        /// <summary>
         /// 按用户ID查询角色
         /// </summary>
         /// <param name="userID">用户ID</param>
