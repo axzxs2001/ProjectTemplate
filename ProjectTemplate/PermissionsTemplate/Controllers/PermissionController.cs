@@ -8,9 +8,13 @@ using PermissionsTemplate.Models.Repository;
 
 namespace PermissionsTemplate.Controllers
 {
+    /// <summary>
+    /// 权限管理Controller
+    /// </summary>
     [Authorize(Policy = "Permission")]
     public class PermissionController : Controller
     {
+        #region 初始化
         /// <summary>
         /// 权限仓储
         /// </summary>
@@ -36,10 +40,16 @@ namespace PermissionsTemplate.Controllers
             _userRepository = userRepository;
             _roleRespository = roleRespository;
         }
+        #endregion
+
+        #region UserPermission View
+
+        #region 获取全部用户，角色，权限
         /// <summary>
         /// 获取全部用户，角色，权限
         /// </summary>
         /// <returns></returns>
+        [HttpGet("all_urp")]
         public IActionResult GetAll()
         {
             try
@@ -54,11 +64,13 @@ namespace PermissionsTemplate.Controllers
                 return new JsonResult(new { result = 1, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings());
             }
         }
-       
 
+        #endregion
         public IActionResult UserPermission()
         {
             return View();
         }
+        #endregion
+
     }
 }

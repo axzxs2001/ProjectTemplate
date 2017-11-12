@@ -1,7 +1,33 @@
 ﻿
 @{
-    ViewData["Title"] = "UserRole";
+    ViewData["Title"] = "用户角色权限设置";
 }
 
-<h2>UserRole</h2>
+<h2>用户角色权限设置</h2>
 
+@section scripts{
+    <script>
+        //加载全部用户角色权限
+        function LoadURP() {
+            $.ajax({
+                method: "GET",
+                url: 'all_urp',
+                data: {
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        //用户 backData.data.users;
+                        //角色 backData.data.roles
+                        //权限 backData.data.permissions
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })
+        }
+    </script>
+}
