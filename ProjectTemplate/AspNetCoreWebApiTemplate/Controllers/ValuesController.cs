@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace AspNetCoreWebApiTemplate.Controllers
 {
@@ -11,6 +12,23 @@ namespace AspNetCoreWebApiTemplate.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+
+        /// <summary>
+        /// 日志对象
+        /// </summary>
+        private readonly ILogger<ValuesController> _logger;
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="logger">日志对象</param>
+
+        public ValuesController(ILogger<ValuesController> logger)
+        {
+            //日志对象
+            _logger = logger;
+
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()

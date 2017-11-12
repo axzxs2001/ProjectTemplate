@@ -17,6 +17,7 @@ using AuthorizePolicy.JWT;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetCoreWebApiTemplate
 {
@@ -60,7 +61,7 @@ namespace AspNetCoreWebApiTemplate
             #endregion
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+      
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -156,7 +157,7 @@ namespace AspNetCoreWebApiTemplate
             });
 
             //注入授权Handler
-            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            services.AddSingleton<IAuthorizationHandler,PermissionHandler>();
             services.AddSingleton(permissionRequirement);
         }
     }
