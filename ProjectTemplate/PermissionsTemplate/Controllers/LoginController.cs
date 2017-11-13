@@ -14,6 +14,7 @@ namespace PermissionsTemplate.Controllers
     [Authorize(Policy = "Permission")]
     public class LoginController : Controller
     {
+        #region 初始化
         /// <summary>
         /// 用户仓储接口
         /// </summary>
@@ -27,8 +28,11 @@ namespace PermissionsTemplate.Controllers
             //用户仓储
             _userRepository = userRepository;
         }
+        #endregion
 
-        #region 自定义策略
+
+        #region 登录，登出
+        #region Lgoin View
         [AllowAnonymous]
         [HttpGet("login")]
         public IActionResult Login(string returnUrl = null)
@@ -40,16 +44,16 @@ namespace PermissionsTemplate.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
         {
-                
-            var user = _userRepository.Login(userName,password);
+
+            var user = _userRepository.Login(userName, password);
             if (user != null)
             {
                 //用户标识
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-   
+
                 identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
                 identity.AddClaim(new Claim(ClaimTypes.Role, user.RoleName));
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier,user.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.UserName));
                 identity.AddClaim(new Claim(ClaimTypes.Sid, user.UserID.ToString()));
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 if (returnUrl == null)
@@ -71,17 +75,19 @@ namespace PermissionsTemplate.Controllers
                 return BadRequest(badUserNameOrPasswordMessage);
             }
         }
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
-        }
+
         [AllowAnonymous]
         [HttpGet("denied")]
         public IActionResult Denied()
         {
             return View();
+        }
+        #endregion
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
         #endregion
 
