@@ -61,6 +61,7 @@ namespace PermissionsTemplate
         {
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IUserRespository, UserRespository>();
+            services.AddScoped<IRoleRespository, RoleRespository>();
         }
 
         void AddAuthorization(IServiceCollection services)

@@ -5,7 +5,73 @@
 
 <h2>用户角色权限设置</h2>
 
+@section css{
+    <link rel="stylesheet" href="css/demo.css" />
+    <link rel="stylesheet" href="css/metroStyle/metroStyle.css" />
+    <link rel="stylesheet" href="css/style.css" />
+}
+<div class="container">
+    <div class="leftBox" id="app">
+        <div class="topBox">
+            <img src="images/admin.png" alt="" />
+            <h1>用户列表</h1>
+        </div>
+        <div class="searchBox">
+            <input type="text" v-model='search' />
+        </div>
+        <div class="bottomBox">
+
+            <table cellpadding="0" cellspacing="0" class="table" id="tableOne">
+                <tr v-for="item in items">
+                    <td align="center" v-html="item.number"></td>
+                    <td v-html="item.name"></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <div class="middleBox" id="appTwo">
+        <div class="topBox">
+            <img src="images/role.png" alt="" />
+            <h1>归属角色</h1>
+        </div>
+
+        <div class="searchBox">
+            <input type="text" v-model='search' />
+        </div>
+        <div class="bottomBox">
+
+            <table cellpadding="0" cellspacing="0" class="table" id="tableTwo">
+                <tr v-for="item in items">
+                    <td align="center"><input type="checkbox" /></td>
+                    <td v-html="item.names"></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <div class="rightBox">
+        <div class="topBox">
+            <img src="images/authority.png" alt="" />
+            <h1>访问权限</h1>
+        </div>
+        <div class="content_wrap">
+            <div class="zTreeDemoBackground">
+                <ul id="treeDemo" class="ztree"></ul>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
 @section scripts{
+    <script type="text/javascript" src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="js/jquery.ztree.exedit.js"></script>
+    <script type="text/javascript" src="js/style.js"></script>
     <script>
         //加载全部用户角色权限
         function LoadURP() {
@@ -29,5 +95,120 @@
                 }
             })
         }
+    </script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                search: '',
+                products: [{
+                    number: 1,
+                    name: '李玉珍'
+                }, {
+                    number: 2,
+                    name: '罗天佑'
+                }, {
+                    number: 3,
+                    name: '王大雷'
+                }, {
+                    number: 4,
+                    name: '张三'
+                }, {
+                    number: 5,
+                    name: '李四'
+                }, {
+                    number: 6,
+                    name: '王小五'
+                }, {
+                    number: 7,
+                    name: '小阿七'
+                }]
+            },
+            computed: {
+                items: function () {
+                    var _search = this.search;
+                    if (_search) {
+                        return this.products.filter(function (product) {
+                            return Object.keys(product).some(function (key) {
+                                return String(product[key]).toLowerCase().indexOf(_search) > -1
+                            })
+                        })
+                    }
+                    return this.products;
+                }
+            }
+        })
+        new Vue({
+            el: '#appTwo',
+            data: {
+                search: '',
+                products: [{
+                    names: '李玉珍'
+                }, {
+                    names: '罗天佑'
+                }, {
+                    names: '王大雷'
+                }, {
+                    names: '张三'
+                }, {
+                    names: '李四'
+                }, {
+                    names: '王小五'
+                }, {
+                    names: '小阿七'
+                }]
+            },
+            computed: {
+                items: function () {
+                    var _search = this.search;
+                    if (_search) {
+                        return this.products.filter(function (product) {
+                            return Object.keys(product).some(function (key) {
+                                return String(product[key]).toLowerCase().indexOf(_search) > -1
+                            })
+                        })
+                    }
+                    return this.products;
+
+                },
+
+            }
+        })
+    </script>
+    <script type="text/javascript">
+        var setting = {
+            view: {
+
+                selectedMulti: false
+            },
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+
+        };
+
+        var zNodes = [
+            { id: 1, pId: 0, name: ".NET快速开发框架", open: true },
+            { id: 11, pId: 1, name: "用户权限" },
+            { id: 111, pId: 11, name: "授权用户" },
+            { id: 112, pId: 11, name: "添加用户" },
+            { id: 113, pId: 11, name: "编辑用户" },
+            { id: 114, pId: 11, name: "删除用户" },
+            { id: 12, pId: 1, name: "用户权限设置" },
+            { id: 121, pId: 12, name: "用户角色" },
+            { id: 122, pId: 12, name: "用户权限" },
+            { id: 123, pId: 12, name: "用户授权" },
+            { id: 124, pId: 12, name: "搜索用户" },
+        ];
+
+        $(document).ready(function () {
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        });
+
     </script>
 }

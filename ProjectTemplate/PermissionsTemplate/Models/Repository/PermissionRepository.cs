@@ -26,8 +26,8 @@ namespace PermissionsTemplate.Models.Repository
             using (var con = new SqlConnection(_permissionConnectionString))
             {
                 return con.Query<AuthorizePermission>($@"select RoleName,Method,Action 
-                from  dbo.Permissions INNER JOIN
-                dbo.RolePermissions ON dbo.Permissions.ID =dbo.RolePermissions.PermissionID INNER JOIN
+                from  dbo.Permissions left JOIN
+                dbo.RolePermissions ON dbo.Permissions.ID =dbo.RolePermissions.PermissionID left JOIN
                 dbo.Roles ON dbo.RolePermissions.RoleID = dbo.Roles.ID").ToList();
             }
         }

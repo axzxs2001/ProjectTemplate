@@ -29,7 +29,7 @@ namespace PermissionsTemplate.Models.Repository
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
-                return con.QuerySingle<UserRole>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,user.name,user.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where users.UserName=@username and users.password=@password", new { username = userName, password = password });
+                return con.QuerySingle<UserRole>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,users.[name],users.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where users.UserName=@username and users.password=@password", new { username = userName, password = password });
             }
         }
      

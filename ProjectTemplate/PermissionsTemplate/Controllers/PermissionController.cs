@@ -66,6 +66,7 @@ namespace PermissionsTemplate.Controllers
         }
 
         #endregion
+        [HttpGet("userpermission")]
         public IActionResult UserPermission()
         {
             return View();
