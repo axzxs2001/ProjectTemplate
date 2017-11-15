@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PermissionsTemplate.Models.Repository;
+using PermissionsTemplate.Models;
 
 namespace PermissionsTemplate.Controllers
 {
@@ -56,12 +57,16 @@ namespace PermissionsTemplate.Controllers
             {
                 var users = _userRepository.GetAllUser();
                 var roles = _roleRespository.GetAllRole();
-                var permissions = _permissionRepository.GetAllPermission();
-                return new JsonResult(new { result = 1, data = new { users = users, roles = roles, permissions = permissions } }, new Newtonsoft.Json.JsonSerializerSettings());
+                var permissions = _permissionRepository.GetAllPermission().Select(s=>new { id=s.ID,name=$"{s.PermissionName}[{s.Method}]",pid=s.Pid});
+                return new JsonResult(new { result = 1, data = new { users = users, roles = roles, permissions = permissions } }, new Newtonsoft.Json.JsonSerializerSettings() {
+                    ContractResolver = new LowercaseContractResolver()
+                });
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 1, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings());
+                return new JsonResult(new { result = 1, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings() {
+                    ContractResolver = new LowercaseContractResolver()
+                });
             }
         }
 
