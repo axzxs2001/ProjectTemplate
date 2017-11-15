@@ -13,13 +13,13 @@ a:link{text-decoration:none;}
 .containers{
 	width: 960px;
 	margin: 0 auto;
-	/*border: 1px solid #d1d1d1;*/
+	border: 1px solid #d1d1d1;
 	padding: 30px 15px;
 	overflow: hidden;
 }
 /*左边盒子*/
 .leftBox{
-	width: 30%;
+	width: 48%;
 	border: 1px solid #d1d1d1;
 	height: 430px;
 	float: left;
@@ -73,17 +73,16 @@ a:link{text-decoration:none;}
 }
 .searchBox{
 	width: 96%;
-	line-height: 24px;
+	line-height: 26px;
 	height: 26px;
 	margin: 5px auto 0;
 	overflow: hidden;				
 }
-    .searchBox input {
-        width: 100%;
-        margin: 0 auto;
-        padding-left: 4%;
-        border: 1px solid #d1d1d1;
-    }
+.searchBox input{
+	width: 94%;
+	margin: 0 auto;
+	padding-left: 4%;
+}
 /*.search{
 	width:12%;
 	float: left;
@@ -102,65 +101,62 @@ a:link{text-decoration:none;}
 	background-color: #0193e0;
 	color: white;
 }
+#tableOne tr td input{
+	display: inline-block;
+	vertical-align: middle;
+}
 #tableOne tr td:nth-child(2):hover{
 	background-color: #0193e0;
 	color: white;
 }
 /*中间盒子*/
 .middleBox{
-	width: 30%;
+	width: 48%;
 	border: 1px solid #d1d1d1;
 	height: 430px;
-	float: left;
-	margin-left: 2.4%;
+	float: right;
 }
 #tableTwo tr td:nth-child(2):hover{
 	background-color: #0193e0;
 	color: white;
 }
-.table tr td input {
-    background-color: transparent;
+.bottomBoxTwo{
+	width: 96%;
+	margin: 5px auto 0;
+	border: 1px solid #d1d1d1;
+	height: 380px;
+	overflow: auto;
 }
-#tableTwo tr td:nth-child(1) {
-    position: relative;
+.middleBoxTwo{
+	width: 48%;
+	border: 1px solid #d1d1d1;
+	height: 430px;
+	float: left;
 }
-
-    #tableTwo tr td:nth-child(1) .input_check {
-        position: absolute;
-        visibility: hidden;
-    }
-
-        #tableTwo tr td:nth-child(1) .input_check + label {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border: 1px solid #666;
-            vertical-align: middle;
-        }
-
-        #tableTwo tr td:nth-child(1) .input_check:checked + label:after {
-            content: "";
-            position: absolute;
-            left: 22px;
-            bottom: 12px;
-            width: 9px;
-            height: 4px;
-            border: 2px solid #666;
-            border-top-color: transparent;
-            border-right-color: transparent;
-            -ms-transform: rotate(-60deg);
-            -moz-transform: rotate(-60deg);
-            -webkit-transform: rotate(-60deg);
-            transform: rotate(-45deg);
-        } 
-
 /*右边盒子*/
 .rightBox{
-	width: 35%;
+	width: 48%;
 	border: 1px solid #d1d1d1;
 	height: 430px;
 	float: right;
 }
+.inputBg tr td:nth-child(1){
+	position: relative;
+}
+.inputBg tr td:nth-child(1) .input_check {position: absolute;visibility: hidden;}
+.inputBg tr td:nth-child(1) .input_check+label {display: inline-block;width: 10px;height: 10px;border: 1px solid #666;}
+.inputBg tr td:nth-child(1) .input_check:checked+label:after {content: "";position: absolute;left: 40px;bottom: 12px;width: 9px;height: 4px;
+border: 2px solid #666;border-top-color: transparent;border-right-color: transparent;
+-ms-transform: rotate(-60deg); 
+-moz-transform: rotate(-60deg); 
+-webkit-transform: rotate(-60deg); 
+transform: rotate(-45deg);
+} 
+
+
+
+
+
 /*zTree*/
 .content_wrap {
 	width: 100%;

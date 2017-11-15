@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewData["Title"] = "UserRole";
+}
+<h2>UserRole</h2>
+<!--用户vs角色-->
+<div class="containers" style="margin-bottom: 10px;">
+    <div class="leftBox" id="app">
+        <div class="topBox">
+            <img src="img/admin.png" alt="" />
+            <h1>用户列表</h1>
+        </div>
+        <div class="searchBox">
+            <input type="text" v-model='search' />
+        </div>
+        <div class="bottomBox">
+
+            <table cellpadding="0" cellspacing="0" class="table" id="tableOne">
+                <tr v-for="item in items">
+                    <td align="center"><input type="radio" name="user" /></td>
+                    <td v-html="item.name"></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <div class="middleBox" id="appTwo">
+        <div class="topBox">
+            <img src="img/role.png" alt="" />
+            <h1>归属角色</h1>
+        </div>
+        <div class="bottomBoxTwo">
+
+            <table cellpadding="0" cellspacing="0" class="table" id="tableTwo">
+                <tr>
+                    <td align="center"><input type="checkbox" class="input_check"><!--<label for="check3"></label>--></td>
+                    <td>管理者</td>
+                </tr>
+                <tr>
+                    <td align="center"><input type="checkbox" class="input_check"><!--<label for="check3"></label>--></td>
+                    <td>员工</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            LoadURP();
+        })
+        //加载全部用户角色权限
+        function LoadURP() {
+            $.ajax({
+                method: "GET",
+                url: 'userrole',
+                data: {
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        //用户
+                        LoadUser(backData.data.users);
+                        //角色
+                        LoadRole(backData.data.roles);                  
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })
+        }
+        var userVue = null;
+        //加载用户Vue
+        function LoadUser(users) {
+            if (userVue == null) {
+                userVue = new Vue({
+                    el: '#users',
+                    data: {
+                        search: '',
+                        selected: (users.length > 0 ? users[0].id : 0),
+                        users: users
+                    },
+                    computed: {
+                        items: function () {
+                            var _search = this.search;
+                            if (_search) {
+                                return this.users.filter(function (user) {
+                                    return Object.keys(user).some(function (key) {
+                                        return String(user[key]).toLowerCase().indexOf(_search) > -1
+                                    })
+                                })
+                            }
+                            return this.users;
+                        }
+                    },
+                    methods: {
+                        ChangeUser: function () {
+                            console.log(this.selected);
+                        }
+                    }
+                })
+            } else {
+                if (users.length > 0) {
+                    userVue.selected = users[0].id
+                }
+                userVue.users = users;
+            }
+        }
+        //加载角色Vue
+        function LoadRole(roles) {
+
+            new Vue({
+                el: '#roles',
+                data: {
+                    selected: (roles.length > 0 ? roles[0].id : 0),
+                    roles: roles
+                }
+            })
+
+        }
+    </script>
+    <script type="text/javascript" src="js/style.js"></script>
+}
