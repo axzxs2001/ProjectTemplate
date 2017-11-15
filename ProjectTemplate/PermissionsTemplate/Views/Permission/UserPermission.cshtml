@@ -18,14 +18,9 @@
             <input type="text" v-model='search' />
         </div>
         <div class="bottomBox">
-
-            <table cellpadding="0" cellspacing="0" class="table" id="tableOne">
-                <tr v-for="item in items">
-                    <td align="center" v-html="item.id"></td>
-                    <td v-html="item.name"></td>
-                </tr>
-
-            </table>
+            <select v-model="selected" v-on:change="ChangeUser" multiple style="width:100%;height:400px;">
+                <option v-for="user in items" v-bind:value="user.id">{{user.name}}</option>
+            </select>
         </div>
     </div>
     <div class="middleBox" id="roles">
@@ -33,19 +28,11 @@
             <img src="images/role.png" alt="" />
             <h1>归属角色</h1>
         </div>
-
-        <div class="searchBox">
-            <input type="text" v-model='search' />
-        </div>
-        <div class="bottomBox">
-
-            <table cellpadding="0" cellspacing="0" class="table" id="tableTwo">
-                <tr v-for="item in items">
-                    <td align="center"><input type="checkbox" class="input_check"><label for="check3"></label>@*<input type="checkbox" checked="" v-model="item.id" />*@</td>
-                    <td v-html="item.rolename"></td>
-                </tr>
-
-            </table>
+        <div class="bottomBox">    
+            <div v-for="role in roles">
+                <input type="checkbox" v-bind:id="role.id" v-bind:value="role.rolename">
+                <label>{{role.rolename}}</label>
+            </div>
         </div>
     </div>
     <div class="rightBox">
@@ -82,9 +69,9 @@
                     if (backData.result == 1) {
                         //用户
                         LoadUser(backData.data.users);
-                        //角色 
+                        //角色
                         LoadRole(backData.data.roles);
-                        //权限 
+                        //权限
                         LoadPermission(backData.data.permissions);
                     }
                     else {
@@ -96,30 +83,42 @@
                 }
             })
         }
+        var userVue = null;
         //加载用户Vue
-        function LoadUser(users)
-        {        
-            new Vue({
-                el: '#users',
-                data: {
-                    search: '',
-                    users: users
-                },
-                computed: {
-                    items: function () {
-                        var _search = this.search;
-                        if (_search) {
-                            return this.users.filter(function (user) {
-                                return Object.keys(user).some(function (key) {
-                                    return String(user[key]).toLowerCase().indexOf(_search) > -1
+        function LoadUser(users) {
+            if (userVue == null) {
+                userVue = new Vue({
+                    el: '#users',
+                    data: {
+                        search: '',
+                        selected: (users.length > 0 ? users[0].id : 0),
+                        users: users
+                    },
+                    computed: {
+                        items: function () {
+                            var _search = this.search;
+                            if (_search) {
+                                return this.users.filter(function (user) {
+                                    return Object.keys(user).some(function (key) {
+                                        return String(user[key]).toLowerCase().indexOf(_search) > -1
+                                    })
                                 })
-                            })
+                            }
+                            return this.users;
                         }
-                        return this.users;
+                    },
+                    methods: {
+                        ChangeUser: function () {
+                            console.log(this.selected);
+                        }
                     }
+                })
+            } else {
+                if (users.length > 0) {
+                    userVue.selected = users[0].id
                 }
-            })
-
+                userVue.users = users;
+            }
         }
         //加载角色Vue
         function LoadRole(roles) {
@@ -127,28 +126,14 @@
             new Vue({
                 el: '#roles',
                 data: {
-                    search: '',
+                    selected: (roles.length > 0 ? roles[0].id : 0),
                     roles: roles
-                },
-                computed: {
-                    items: function () {
-                        var _search = this.search;
-                        if (_search) {
-                            return this.roles.filter(function (role) {
-                                return Object.keys(role).some(function (key) {
-                                    return String(role[key]).toLowerCase().indexOf(_search) > -1
-                                })
-                            })
-                        }
-                        return this.roles;
-                    }
                 }
             })
 
         }
-        function LoadPermission(permissions)
-        {
-            console.log(permissions);
+        function LoadPermission(permissions) {
+
             var setting = {
                 view: {
 
