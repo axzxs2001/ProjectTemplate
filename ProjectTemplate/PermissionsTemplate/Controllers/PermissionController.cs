@@ -153,6 +153,66 @@ namespace PermissionsTemplate.Controllers
                 });
             }
         }
+        /// <summary>
+        /// 保存角色权限
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <param name="permissionIDs">权限ID组</param>
+        /// <returns></returns>
+        [HttpPost("savarolepermission")]
+        public IActionResult SavaRolePermission(int roleID,int[] permissionIDs)
+        {
+            try
+            {
+                var result = _roleRespository.AddRolePermission(roleID, permissionIDs);
+                if (result)
+                {
+                    return new JsonResult(new { result = 1, message = "保存成功！" }, new Newtonsoft.Json.JsonSerializerSettings()
+                    {
+                        ContractResolver = new LowercaseContractResolver()
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new { result = 0, message = "保存失败！" }, new Newtonsoft.Json.JsonSerializerSettings()
+                    {
+                        ContractResolver = new LowercaseContractResolver()
+                    });
+                }
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+
+        /// <summary>
+        /// 按照roleid获取权限id
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        [HttpGet("getpermissionbyroleid")]
+        public IActionResult GetRolePermission(int roleID)
+        {
+            try
+            {
+                var rolepermissions = _roleRespository.GetRolePermissionsByRoleID(roleID);
+                return new JsonResult(new { result = 1, data = rolepermissions.Select(s => new { id = s.PermissionID }) }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
         #endregion
 
         public IActionResult UserRole()

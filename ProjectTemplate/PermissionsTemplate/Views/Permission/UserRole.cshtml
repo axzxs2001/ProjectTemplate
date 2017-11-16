@@ -75,7 +75,7 @@
             })
         }
         var userVue = null;
-        //加载用户Vue
+        //加载全部用户
         function LoadUser(users) {
             userVue = new Vue({
                 el: '#users',
@@ -99,14 +99,14 @@
                 },
                 methods: {
                     ChangeUser: function () {
-                        LoadRoles(this.selected);
+                        LoadRoleByUserID(this.selected);
                     }
                 }
             })
-            LoadRoles(users[0].id);
+            LoadRoleByUserID(users[0].id);
         }
-
-        function LoadRoles(userid) {
+        //按用户ID查询角色
+        function LoadRoleByUserID(userid) {
             $.ajax({
                 method: "GET",
                 url: '/getrolebyuserid',
@@ -132,7 +132,7 @@
         }
 
         var roleVue = null;
-        //加载角色Vue
+        //加载全部角色
         function LoadRole(roles) {
             roleVue = new Vue({
                 el: '#roles',
@@ -144,7 +144,7 @@
             })
 
         }
-
+        //保存用户角色
         function SavaUserRole() {
 
             $.ajax({

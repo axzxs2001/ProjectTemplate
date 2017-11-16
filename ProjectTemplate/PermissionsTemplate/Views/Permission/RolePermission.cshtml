@@ -1,7 +1,206 @@
 ﻿
 @{
-    ViewData["Title"] = "RolePermission";
+    ViewData["Title"] = "角色权限设置";
+}
+<h3>角色权限设置</h3>
+@section css{
+    <link rel="stylesheet" href="~/css/metroStyle/metroStyle.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
 }
 
-<h2>RolePermission</h2>
+<div class="row" style="text-align:right;margin-bottom:10px;margin-right:10px;">
+    <button onclick="SavaRolePermission()" class="btn btn-success">保存</button>
+</div>
+<div class="containers">
+    <div class="leftBox" id="roles">
+        <div class="topBox">
+            <img src="~/images/admin.png" alt="" />
+            <h1>用户列表</h1>
+        </div>
+        <div class="searchBox">
+            <input type="text" v-model='search' />
+        </div>
+        <div class="bottomBox">
+            <table cellpadding="0" cellspacing="0" class="table" id="tableOne">
+                <tr v-for="role in searchroles">
+                    <td align="center"><input type="radio" name="user" v-on:change="ChangeRole" v-model="selected" v-bind:value="role.id" /></td>
+                    <td v-html="role.rolename"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="rightBox">
+        <div class="topBox">
+            <img src="~/images/authority.png" alt="" />
+            <h1>访问权限</h1>
+        </div>
+        <div class="content_wrap">
+            <div class="zTreeDemoBackground">
+                <ul id="treePermission" class="ztree"></ul>
+            </div>
+        </div>
 
+
+
+    </div>
+</div>
+@section scripts{
+
+    <script type="text/javascript" src="~/js/style.js"></script>
+    <script type="text/javascript" src="~/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="~/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="~/js/jquery.ztree.exedit.js"></script>
+    <script type="text/javascript" src="~/js/vue.min.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            LoadRolePermission();
+        })
+        //加载全部角色权限
+        function LoadRolePermission() {
+            $.ajax({
+                method: "GET",
+                url: '/getrolepermission',
+                data: {
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        //角色
+                        LoadRole(backData.data.roles);
+                        //权限
+                        LoadPermission(backData.data.permissions);
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })
+        }
+        var roleVue = null;
+        //加载全部角色
+        function LoadRole(roles) {          
+            roleVue = new Vue({
+                el: '#roles',
+                data: {
+                    search: '',
+                    selected: (roles.length > 0 ? roles[0].id : 0),
+                    roles: roles
+                },
+                computed: {
+                    searchroles: function () {
+                        var _search = this.search;
+                        if (_search) {
+                            return this.roles.filter(function (role) {
+                                return Object.keys(role).some(function (key) {
+                                    return String(role[key]).toLowerCase().indexOf(_search) > -1
+                                })
+                            })
+                        }
+                        return this.roles;
+                    }
+                },
+                methods: {
+                    ChangeRole: function () {
+                        LoadPermissionByRoleID(this.selected);
+                    }
+                }
+            })
+            LoadPermissionByRoleID(roles[0].id);
+        }
+        //按角色ID查询权限
+        function LoadPermissionByRoleID(roleID)
+        {
+            $.ajax({
+                method: "GET",
+                url: '/getpermissionbyroleid',
+                data: {
+                    roleid: roleID
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        var permissions = new Array()
+                        $.each(backData.data, function (n, item) {
+                            permissions.push(item.id);
+                        });      
+
+                        var treeObj = $.fn.zTree.getZTreeObj("treePermission");
+                        //树形节点全部不选中
+                        treeObj.checkAllNodes(false);
+                        //设置该用户拥有的权限
+                        var nodes = treeObj.getNodes();
+                        $.each(nodes, function (n, item) {
+                            for (var i = 0; i < permissions.length; i++)
+                            {
+                                if (item.id == permissions[i])
+                                {
+                                    treeObj.checkNode(item, true, true);                             
+                                }
+                            }                     
+                        });            
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })       
+        }
+        //加载全部权限
+        function LoadPermission(permissions) {
+            var setting = {
+                view: {
+                    selectedMulti: false
+                },
+                check: {
+                    enable: true
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+            };
+            var zNodes = permissions; 
+            $(document).ready(function () {
+                $.fn.zTree.init($("#treePermission"), setting, zNodes);
+            });
+        }
+        //保存用户权限
+        function SavaRolePermission() {
+         
+            var treeObj = $.fn.zTree.getZTreeObj("treePermission");
+            var nodes = treeObj.getCheckedNodes(true);   
+
+            var permissions = new Array()
+            $.each(nodes, function (n, item) {
+                permissions.push(item.id);
+            });
+
+            $.ajax({
+                method: "POST",
+                url: '/savarolepermission',
+                data: {
+                    roleid: roleVue.selected,
+                    permissionids: permissions
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        console.log("添加成功")
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })
+
+        }
+    </script>
+}

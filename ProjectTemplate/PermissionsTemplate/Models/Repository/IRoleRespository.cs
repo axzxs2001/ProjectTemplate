@@ -59,5 +59,13 @@ namespace PermissionsTemplate.Models.Repository
         /// <returns></returns>
         bool RemoveRole(int roleID);
 
+        /// <summary>
+        /// 添加角色权限ID
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <param name="permissionIDs">权限ID</param>
+        /// <returns></returns>
+        bool AddRolePermission(int roleID, int[] permissionIDs);
+
     }
 }

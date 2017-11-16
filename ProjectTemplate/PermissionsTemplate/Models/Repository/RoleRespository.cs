@@ -122,5 +122,38 @@ namespace PermissionsTemplate.Models.Repository
                     ) > 0;
             }
         }
+
+        /// <summary>
+        /// 添加角色权限ID
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <param name="permissionIDs">权限ID</param>
+        /// <returns></returns>
+        public bool AddRolePermission(int roleID, int[] permissionIDs)
+        {
+            using (var con = new SqlConnection(_permissionConnectionString))
+            {
+                con.Open();
+                var tran = con.BeginTransaction();
+                try
+                {
+                    con.Execute($"delete rolepermissions where roleid=@roleid", new { roleid = roleID }, tran);
+                    var list = new List<dynamic>();
+                    foreach (var permissionID in permissionIDs)
+                    {
+                        list.Add(new { roleid = roleID, permissionid = permissionID });
+                    }
+                    con.Execute($@"insert into rolepermissions(roleid,permissionid) values(@roleid,@permissionid)", list, tran);
+
+                    tran.Commit();
+                    return true;
+                }
+                catch (Exception exc)
+                {
+                    tran.Rollback();
+                    throw exc;
+                }
+            }
+        }
     }
 }
