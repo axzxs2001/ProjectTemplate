@@ -1,59 +1,59 @@
-﻿
-@{
-    ViewData["Title"] = "UserRole";
+﻿@{
+    ViewData["Title"] = "用户角色设置";
 }
-<h2>UserRole</h2>
+@section css{
+    <link rel="stylesheet" href="~/css/style.css" />
+}
+<h2>用户角色设置</h2>
 <!--用户vs角色-->
 <div class="containers" style="margin-bottom: 10px;">
-    <div class="leftBox" id="app">
+    <div class="leftBox" id="users">
         <div class="topBox">
-            <img src="img/admin.png" alt="" />
+            <img src="~/images/admin.png" alt="" />
             <h1>用户列表</h1>
         </div>
         <div class="searchBox">
             <input type="text" v-model='search' />
         </div>
         <div class="bottomBox">
-
             <table cellpadding="0" cellspacing="0" class="table" id="tableOne">
-                <tr v-for="item in items">
-                    <td align="center"><input type="radio" name="user" /></td>
-                    <td v-html="item.name"></td>
+                <tr v-for="user in searchusers">
+                    <td align="center"><input type="radio" name="user" v-on:change="ChangeUser" v-model="selected" v-bind:value="user.id" /></td>
+                    <td v-html="user.name"></td>
                 </tr>
-
             </table>
         </div>
     </div>
-    <div class="middleBox" id="appTwo">
+    <div class="middleBox" id="roles">
         <div class="topBox">
-            <img src="img/role.png" alt="" />
+            <img src="~/images/role.png" alt="" />
             <h1>归属角色</h1>
         </div>
         <div class="bottomBoxTwo">
 
             <table cellpadding="0" cellspacing="0" class="table" id="tableTwo">
-                <tr>
-                    <td align="center"><input type="checkbox" class="input_check"><!--<label for="check3"></label>--></td>
-                    <td>管理者</td>
+                <tr v-for="role in roles">
+                    <td align="center"><input type="checkbox" v-model="checkedID" class="input_check" v-bind:value="role.id" ></td>
+                    <td v-html="role.rolename"></td>
                 </tr>
-                <tr>
-                    <td align="center"><input type="checkbox" class="input_check"><!--<label for="check3"></label>--></td>
-                    <td>员工</td>
-                </tr>
+             
             </table>
         </div>
     </div>
 </div>
+<div class="row">
+    <button onclick="SavaUserRole()">保存</button>
+</div>
 @section scripts{
     <script>
         $(function () {
-            LoadURP();
+            LoadUserRole();
         })
         //加载全部用户角色权限
-        function LoadURP() {
+        function LoadUserRole() {
             $.ajax({
                 method: "GET",
-                url: 'userrole',
+                url: '/getuserrole',
                 data: {
                 },
                 success: function (backData) {
@@ -61,7 +61,7 @@
                         //用户
                         LoadUser(backData.data.users);
                         //角色
-                        LoadRole(backData.data.roles);                  
+                        LoadRole(backData.data.roles);
                     }
                     else {
                         alert(backData.message);
@@ -84,7 +84,7 @@
                         users: users
                     },
                     computed: {
-                        items: function () {
+                        searchusers: function () {
                             var _search = this.search;
                             if (_search) {
                                 return this.users.filter(function (user) {
@@ -109,18 +109,28 @@
                 userVue.users = users;
             }
         }
+        var roleVue = null;
         //加载角色Vue
         function LoadRole(roles) {
 
-            new Vue({
+            roleVue = new Vue({
                 el: '#roles',
                 data: {
                     selected: (roles.length > 0 ? roles[0].id : 0),
-                    roles: roles
+                    roles: roles,
+                    checkedID: []
                 }
             })
 
         }
+
+        function SavaUserRole() {
+            console.log(roleVue.checkedID)
+            console.log(userVue.selected)
+
+        }
     </script>
-    <script type="text/javascript" src="js/style.js"></script>
+    <script type="text/javascript" src="~/js/style.js"></script>
+    <script type="text/javascript" src="~/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="~/js/vue.min.js"></script>
 }

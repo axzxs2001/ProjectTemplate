@@ -80,5 +80,7 @@ namespace PermissionsTemplate.Models.Repository
                 return con.Execute($@"delete permissions where id=@id", new { id = permissionID}) > 0;
             }
         }
+
+      
     }
 }
