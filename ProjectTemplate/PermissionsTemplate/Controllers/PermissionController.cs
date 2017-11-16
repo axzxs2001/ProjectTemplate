@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PermissionsTemplate.Models.Repository;
 using PermissionsTemplate.Models;
+using PermissionsTemplate.Models.Common;
 
 namespace PermissionsTemplate.Controllers
 {
@@ -13,9 +14,9 @@ namespace PermissionsTemplate.Controllers
     /// 权限管理Controller
     /// </summary>
     [Authorize(Policy = "Permission")]
-    public class PermissionController : Controller
+    public class PermissionController : BaseController
     {
-        #region 初始化
+        #region 初始化 字段，构造
         /// <summary>
         /// 权限仓储
         /// </summary>
@@ -42,10 +43,11 @@ namespace PermissionsTemplate.Controllers
             _roleRespository = roleRespository;
         }
         #endregion
-
-        #region UserPermission View
-
-        #region 获取全部用户，角色，权限
+        #region 用户角色
+        public IActionResult UserRole()
+        {
+            return View();
+        }
         /// <summary>
         /// 获取全部用户，角色
         /// </summary>
@@ -58,30 +60,6 @@ namespace PermissionsTemplate.Controllers
                 var users = _userRepository.GetAllUser();
                 var roles = _roleRespository.GetAllRole();
                 return new JsonResult(new { result = 1, data = new { users = users, roles = roles } }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
-            }
-            catch (Exception exc)
-            {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
-            }
-        }
-        /// <summary>
-        /// 获取全部角色，权限
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("getrolepermission")]
-        public IActionResult GetRolePermission()
-        {
-            try
-            {
-                var roles = _roleRespository.GetAllRole();
-                var permissions = _permissionRepository.GetAllPermission().Select(s => new { id = s.ID, name = $"{s.PermissionName}[{s.Method}]", pid = s.Pid });
-                return new JsonResult(new { result = 1, data = new { roles = roles, permissions = permissions } }, new Newtonsoft.Json.JsonSerializerSettings()
                 {
                     ContractResolver = new LowercaseContractResolver()
                 });
@@ -140,7 +118,37 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var userroles = _userRepository.GetUserRole(userID);
-                return new JsonResult(new { result = 1, data = userroles.Select(s=>new {id=s.RoleID }) }, new Newtonsoft.Json.JsonSerializerSettings()
+                return new JsonResult(new { result = 1, data = userroles.Select(s => new { id = s.RoleID }) }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        #endregion
+        #region 角色权限
+        public IActionResult RolePermission()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取全部角色，权限
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getrolepermission")]
+        public IActionResult GetRolePermission()
+        {
+            try
+            {
+                var roles = _roleRespository.GetAllRole();
+                var permissions = _permissionRepository.GetAllPermission().Select(s => new { id = s.ID, name = $"{s.PermissionName}[{s.Method}]", pid = s.Pid });
+                return new JsonResult(new { result = 1, data = new { roles = roles, permissions = permissions } }, new Newtonsoft.Json.JsonSerializerSettings()
                 {
                     ContractResolver = new LowercaseContractResolver()
                 });
@@ -160,7 +168,7 @@ namespace PermissionsTemplate.Controllers
         /// <param name="permissionIDs">权限ID组</param>
         /// <returns></returns>
         [HttpPost("savarolepermission")]
-        public IActionResult SavaRolePermission(int roleID,int[] permissionIDs)
+        public IActionResult SavaRolePermission(int roleID, int[] permissionIDs)
         {
             try
             {
@@ -192,7 +200,7 @@ namespace PermissionsTemplate.Controllers
         /// <summary>
         /// 按照roleid获取权限id
         /// </summary>
-        /// <param name="userID">用户ID</param>
+        /// <param name="roleID">角色ID</param>
         /// <returns></returns>
         [HttpGet("getpermissionbyroleid")]
         public IActionResult GetRolePermission(int roleID)
@@ -213,18 +221,93 @@ namespace PermissionsTemplate.Controllers
                 });
             }
         }
-        #endregion
 
-        public IActionResult UserRole()
-        {
-            return View();
-        }
-        public IActionResult RolePermission()
-        {
-            return View();
-        }
+
 
         #endregion
 
+        #region 用户
+        public IActionResult UserIndex()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 获取全部用户
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getusers")]
+        public IActionResult GetUsers()
+        {
+            try
+            {
+                var users = _userRepository.GetAllUser();
+                return new JsonResult(new { result = 1, data = users }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+
+        #endregion
+        #region 角色
+        public IActionResult RoleIndex()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取全部角色
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getroles")]
+        public IActionResult GetRoles()
+        {
+            try
+            {
+                var roles = _roleRespository.GetAllRole();
+                return new JsonResult(new { result = 1, data = roles }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        #endregion
+        #region 权限
+        public IActionResult PermissionIndex()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取全部权限
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getpermissions")]
+        public IActionResult GetPermissions()
+        {
+            try
+            {
+                var permissions = _permissionRepository.GetAllPermission();
+                return ToJson(HttpResult.Success, permissions);
+            }
+            catch (Exception exc)
+            {
+                return ToJson(HttpResult.Exception, message: exc.Message);
+            }
+        }
+        #endregion
     }
 }
