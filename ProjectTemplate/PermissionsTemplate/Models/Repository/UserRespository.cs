@@ -82,7 +82,7 @@ namespace PermissionsTemplate.Models.Repository
         {
             using (var con = new SqlConnection(_permissionConnectionString))
             {
-                return con.Query<UserRole>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,user.name,user.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where UserRoles.userid=@userid", new { userid = userID }).ToList();
+                return con.Query<UserRole>($@"select UserRoles.userid,UserRoles.roleid,roles.RoleName,users.name,users.username from Users join UserRoles on Users.id = UserRoles.UserID join  Roles on roles.ID = UserRoles.RoleID where UserRoles.userid=@userid", new { userid = userID }).ToList();
             }
         }
 
@@ -146,14 +146,14 @@ namespace PermissionsTemplate.Models.Repository
                 var tran = con.BeginTransaction();
                 try
                 {
-                    con.Execute($"delete userroles where userid=@userid",new { userid=userID});
+                    con.Execute($"delete userroles where userid=@userid",new { userid=userID},tran);
 
                     var list = new List<dynamic>();
                     foreach (var roleID in roleIDs)
                     {
                         list.Add(new { userid = userID, roleid = roleID });
                     }
-                    con.Execute($@"insert into userroles(userid,roleid) values(@userid,@roleid)", list) ;
+                    con.Execute($@"insert into userroles(userid,roleid) values(@userid,@roleid)", list, tran) ;
 
                     tran.Commit();
                     return true;

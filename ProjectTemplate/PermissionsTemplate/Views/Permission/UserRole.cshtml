@@ -4,8 +4,11 @@
 @section css{
     <link rel="stylesheet" href="~/css/style.css" />
 }
-<h2>用户角色设置</h2>
-<!--用户vs角色-->
+<h3>用户角色设置</h3>
+
+<div class="row" style="text-align:right;margin-bottom:10px;margin-right:10px;">
+    <button onclick="SavaUserRole()" class="btn btn-success">保存</button>
+</div>
 <div class="containers" style="margin-bottom: 10px;">
     <div class="leftBox" id="users">
         <div class="topBox">
@@ -33,17 +36,16 @@
 
             <table cellpadding="0" cellspacing="0" class="table" id="tableTwo">
                 <tr v-for="role in roles">
-                    <td align="center"><input type="checkbox" v-model="checkedID" class="input_check" v-bind:value="role.id" ></td>
+                    <td align="center"><input type="checkbox" v-model="checkedID" class="input_check" v-bind:value="role.id"></td>
                     <td v-html="role.rolename"></td>
                 </tr>
-             
+
             </table>
         </div>
     </div>
+
 </div>
-<div class="row">
-    <button onclick="SavaUserRole()">保存</button>
-</div>
+
 @section scripts{
     <script>
         $(function () {
@@ -75,44 +77,63 @@
         var userVue = null;
         //加载用户Vue
         function LoadUser(users) {
-            if (userVue == null) {
-                userVue = new Vue({
-                    el: '#users',
-                    data: {
-                        search: '',
-                        selected: (users.length > 0 ? users[0].id : 0),
-                        users: users
-                    },
-                    computed: {
-                        searchusers: function () {
-                            var _search = this.search;
-                            if (_search) {
-                                return this.users.filter(function (user) {
-                                    return Object.keys(user).some(function (key) {
-                                        return String(user[key]).toLowerCase().indexOf(_search) > -1
-                                    })
+            userVue = new Vue({
+                el: '#users',
+                data: {
+                    search: '',
+                    selected: (users.length > 0 ? users[0].id : 0),
+                    users: users
+                },
+                computed: {
+                    searchusers: function () {
+                        var _search = this.search;
+                        if (_search) {
+                            return this.users.filter(function (user) {
+                                return Object.keys(user).some(function (key) {
+                                    return String(user[key]).toLowerCase().indexOf(_search) > -1
                                 })
-                            }
-                            return this.users;
+                            })
                         }
-                    },
-                    methods: {
-                        ChangeUser: function () {
-                            console.log(this.selected);
-                        }
+                        return this.users;
                     }
-                })
-            } else {
-                if (users.length > 0) {
-                    userVue.selected = users[0].id
+                },
+                methods: {
+                    ChangeUser: function () {
+                        LoadRoles(this.selected);
+                    }
                 }
-                userVue.users = users;
-            }
+            })
+            LoadRoles(users[0].id);
         }
+
+        function LoadRoles(userid) {
+            $.ajax({
+                method: "GET",
+                url: '/getrolebyuserid',
+                data: {
+                    userid: userid
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        var roles = new Array()
+                        $.each(backData.data, function (n, item) {
+                            roles.push(item.id);
+                        });
+                        roleVue.checkedID = roles;
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })
+        }
+
         var roleVue = null;
         //加载角色Vue
         function LoadRole(roles) {
-
             roleVue = new Vue({
                 el: '#roles',
                 data: {
@@ -125,8 +146,26 @@
         }
 
         function SavaUserRole() {
-            console.log(roleVue.checkedID)
-            console.log(userVue.selected)
+
+            $.ajax({
+                method: "POST",
+                url: '/savauserrole',
+                data: {
+                    userid: userVue.selected,
+                    roleids: roleVue.checkedID
+                },
+                success: function (backData) {
+                    if (backData.result == 1) {
+                        console.log("添加成功")
+                    }
+                    else {
+                        alert(backData.message);
+                    }
+                },
+                error: function (error) {
+                    alert(error.statusText)
+                }
+            })
 
         }
     </script>

@@ -11,7 +11,7 @@ a:hover{text-decoration:none;}
 a:link{text-decoration:none;}
 /*内容*/
 .containers{
-	width: 960px;
+	/*width: 960px;*/
 	margin: 0 auto;
 	border: 1px solid #d1d1d1;
 	padding: 30px 15px;
@@ -73,30 +73,17 @@ a:link{text-decoration:none;}
 }
 .searchBox{
 	width: 96%;
-	line-height: 26px;
-	height: 26px;
+	line-height: 24px;
+	height: 30px;
 	margin: 5px auto 0;
 	overflow: hidden;				
 }
 .searchBox input{
-	width: 94%;
+	width: 100%;
 	margin: 0 auto;
 	padding-left: 4%;
 }
-/*.search{
-	width:12%;
-	float: left;
-	border-top: 1px solid #a9a9a9;
-	border-right: 1px solid #a9a9a9;
-	border-bottom: 1px solid #a9a9a9;
-	height: 21px;
-	line-height: 21px;
-	text-align: center;
-}
-.search img{
-	width: 50%;
-	margin-top: 2px;
-}*/
+
 .bgColor{
 	background-color: #0193e0;
 	color: white;
@@ -124,7 +111,7 @@ a:link{text-decoration:none;}
 	width: 96%;
 	margin: 5px auto 0;
 	border: 1px solid #d1d1d1;
-	height: 380px;
+	height: 384px;
 	overflow: auto;
 }
 .middleBoxTwo{

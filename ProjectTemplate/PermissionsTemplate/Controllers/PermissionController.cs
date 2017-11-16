@@ -94,7 +94,13 @@ namespace PermissionsTemplate.Controllers
                 });
             }
         }
-
+        /// <summary>
+        /// 保存用户角色
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <param name="roleIDs">角色ID组</param>
+        /// <returns></returns>
+        [HttpPost("savauserrole")]
         public IActionResult SavaUserRole(int userID, int[] roleIDs)
         {
             try
@@ -114,6 +120,30 @@ namespace PermissionsTemplate.Controllers
                         ContractResolver = new LowercaseContractResolver()
                     });
                 }
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        /// <summary>
+        /// 按照userid获取用户id
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        [HttpGet("getrolebyuserid")]
+        public IActionResult GetUserRole(int userID)
+        {
+            try
+            {
+                var userroles = _userRepository.GetUserRole(userID);
+                return new JsonResult(new { result = 1, data = userroles.Select(s=>new {id=s.RoleID }) }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
             }
             catch (Exception exc)
             {
