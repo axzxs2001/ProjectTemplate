@@ -60,17 +60,11 @@ namespace PermissionsTemplate.Controllers
             {
                 var users = _userRepository.GetAllUser();
                 var roles = _roleRespository.GetAllRole();
-                return new JsonResult(new { result = 1, data = new { users = users, roles = roles } }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Success, new { users = users, roles = roles });     
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception,message:exc.Message);               
             }
         }
         /// <summary>
@@ -85,27 +79,11 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var result = _userRepository.AddUserRole(userID, roleIDs);
-                if (result)
-                {
-                    return new JsonResult(new { result = 1, message = "保存成功！" }, new Newtonsoft.Json.JsonSerializerSettings()
-                    {
-                        ContractResolver = new LowercaseContractResolver()
-                    });
-                }
-                else
-                {
-                    return new JsonResult(new { result = 0, message = "保存失败！" }, new Newtonsoft.Json.JsonSerializerSettings()
-                    {
-                        ContractResolver = new LowercaseContractResolver()
-                    });
-                }
+                return ToJson(result?HttpResult.Success:HttpResult.Fail,result?"保存成功":"保存失败");            
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         /// <summary>
@@ -119,17 +97,11 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var userroles = _userRepository.GetUserRole(userID);
-                return new JsonResult(new { result = 1, data = userroles.Select(s => new { id = s.RoleID }) }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Success,userroles);              
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         #endregion
@@ -149,17 +121,11 @@ namespace PermissionsTemplate.Controllers
             {
                 var roles = _roleRespository.GetAllRole();
                 var permissions = _permissionRepository.GetAllPermission().Select(s => new { id = s.ID, name = $"{s.PermissionName}[{s.Method}]", pid = s.Pid });
-                return new JsonResult(new { result = 1, data = new { roles = roles, permissions = permissions } }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Success, new { roles = roles, permissions = permissions });              
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         /// <summary>
@@ -174,27 +140,11 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var result = _roleRespository.AddRolePermission(roleID, permissionIDs);
-                if (result)
-                {
-                    return new JsonResult(new { result = 1, message = "保存成功！" }, new Newtonsoft.Json.JsonSerializerSettings()
-                    {
-                        ContractResolver = new LowercaseContractResolver()
-                    });
-                }
-                else
-                {
-                    return new JsonResult(new { result = 0, message = "保存失败！" }, new Newtonsoft.Json.JsonSerializerSettings()
-                    {
-                        ContractResolver = new LowercaseContractResolver()
-                    });
-                }
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, result ? "保存成功" : "保存失败");
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
 
@@ -209,17 +159,11 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var rolepermissions = _roleRespository.GetRolePermissionsByRoleID(roleID);
-                return new JsonResult(new { result = 1, data = rolepermissions.Select(s => new { id = s.PermissionID }) }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Success, rolepermissions);
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
 
@@ -243,17 +187,11 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var users = _userRepository.GetAllUser();
-                return new JsonResult(new { result = 1, data = users }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Success, users);
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         /// <summary>
@@ -292,10 +230,7 @@ namespace PermissionsTemplate.Controllers
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         /// <summary>
@@ -313,10 +248,7 @@ namespace PermissionsTemplate.Controllers
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         #endregion
@@ -335,17 +267,11 @@ namespace PermissionsTemplate.Controllers
             try
             {
                 var roles = _roleRespository.GetAllRole();
-                return new JsonResult(new { result = 1, data = roles }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Success, roles);
             }
             catch (Exception exc)
             {
-                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    ContractResolver = new LowercaseContractResolver()
-                });
+                return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
         #endregion
