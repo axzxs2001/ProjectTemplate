@@ -8,6 +8,9 @@ using PermissionsTemplate.Models.Repository;
 using PermissionsTemplate.Models;
 using PermissionsTemplate.Models.Common;
 using PermissionsTemplate.Models.DataModels;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace PermissionsTemplate.Controllers
 {
@@ -200,7 +203,7 @@ namespace PermissionsTemplate.Controllers
         /// <param name="user">用户</param>
         /// <returns></returns>
         [HttpPost("adduser")]
-        public IActionResult AddUsers(User user)
+        public IActionResult AddUser(User user)
         {
             try
             {
@@ -221,7 +224,7 @@ namespace PermissionsTemplate.Controllers
         /// <param name="user">用户</param>
         /// <returns></returns>
         [HttpPut("modifyuser")]
-        public IActionResult ModifyUsers(User user)
+        public IActionResult ModifyUser(User user)
         {
             try
             {
@@ -239,7 +242,7 @@ namespace PermissionsTemplate.Controllers
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
         [HttpDelete("removeuser")]
-        public IActionResult RemoveUsers(int userID)
+        public IActionResult RemoveUser(int userID)
         {
             try
             {
@@ -274,6 +277,63 @@ namespace PermissionsTemplate.Controllers
                 return ToJson(HttpResult.Exception, message: exc.Message);
             }
         }
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        /// <param name="role">角色</param>
+        /// <returns></returns>
+        [HttpPost("addrole")]
+        public IActionResult AddRole(string roleName)
+        {
+            try
+            {
+                var result = _roleRespository.AddRole(roleName);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "添加成功" : "添加失败");
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        /// <summary>
+        /// 修改角色
+        /// </summary>
+        /// <param name="role">角色</param>
+        /// <returns></returns>
+        [HttpPut("modifyrole")]
+        public IActionResult ModifyRole(Role role)
+        {
+            try
+            {
+                var result = _roleRespository.ModifyRole(role);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "修改成功" : "修改失败");
+            }
+            catch (Exception exc)
+            {
+                return ToJson(HttpResult.Exception, message: exc.Message);
+            }
+        }
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <returns></returns>
+        [HttpDelete("removerole")]
+        public IActionResult RemoveRole(int roleID)
+        {
+            try
+            {
+                var result = _roleRespository.RemoveRole(roleID);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "删除成功" : "删除失败");
+            }
+            catch (Exception exc)
+            {
+                return ToJson(HttpResult.Exception, message: exc.Message);
+            }
+        }
         #endregion
         #region 权限
         public IActionResult PermissionIndex()
@@ -296,6 +356,124 @@ namespace PermissionsTemplate.Controllers
             {
                 return ToJson(HttpResult.Exception, message: exc.Message);
             }
+        }
+        /// <summary>
+        /// 添加权限
+        /// </summary>
+        /// <param name="role">权限</param>
+        /// <returns></returns>
+        [HttpPost("addpermission")]
+        public IActionResult AddPermission(Permission permission)
+        {
+            try
+            {
+                var result = _permissionRepository.AddPermission(permission);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "添加成功" : "添加失败");
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        /// <summary>
+        /// 修改权限
+        /// </summary>
+        /// <param name="role">权限</param>
+        /// <returns></returns>
+        [HttpPut("modifypermission")]
+        public IActionResult ModifyPermission(Permission permission)
+        {
+            try
+            {
+                var result = _permissionRepository.ModifyPermission(permission);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "修改成功" : "修改失败");
+            }
+            catch (Exception exc)
+            {
+                return ToJson(HttpResult.Exception, message: exc.Message);
+            }
+        }
+        /// <summary>
+        /// 删除权限
+        /// </summary>
+        /// <param name="roleID">权限ID</param>
+        /// <returns></returns>
+        [HttpDelete("removepermission")]
+        public IActionResult RemovePermission(int permissionID)
+        {
+            try
+            {
+                var result = _permissionRepository.RemovePermission(permissionID);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "删除成功" : "删除失败");
+            }
+            catch (Exception exc)
+            {
+                return ToJson(HttpResult.Exception, message: exc.Message);
+            }
+        }
+        #endregion
+
+
+        #region 登录，登出
+        #region Lgoin View
+        [AllowAnonymous]
+        [HttpGet("login")]
+        public IActionResult Login(string returnUrl = null)
+        {
+            TempData["returnUrl"] = returnUrl;
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
+        {
+
+            var user = _userRepository.Login(userName, password);
+            if (user != null)
+            {
+                //用户标识
+                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
+                identity.AddClaim(new Claim(ClaimTypes.Role, user.RoleName));
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.Sid, user.UserID.ToString()));
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+                if (returnUrl == null)
+                {
+                    returnUrl = TempData["returnUrl"]?.ToString();
+                }
+                if (returnUrl != null)
+                {
+                    return Redirect(returnUrl);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+            }
+            else
+            {
+                const string badUserNameOrPasswordMessage = "用户名或密码错误！";
+                return BadRequest(badUserNameOrPasswordMessage);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("denied")]
+        public IActionResult Denied()
+        {
+            return View();
+        }
+        #endregion
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
         #endregion
     }
