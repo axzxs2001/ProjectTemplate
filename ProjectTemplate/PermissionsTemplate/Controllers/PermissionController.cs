@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using PermissionsTemplate.Models.Repository;
 using PermissionsTemplate.Models;
 using PermissionsTemplate.Models.Common;
+using PermissionsTemplate.Models.DataModels;
 
 namespace PermissionsTemplate.Controllers
 {
@@ -255,7 +256,69 @@ namespace PermissionsTemplate.Controllers
                 });
             }
         }
-
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <param name="user">用户</param>
+        /// <returns></returns>
+        [HttpPost("adduser")]
+        public IActionResult AddUsers(User user)
+        {
+            try
+            {
+                var result = _userRepository.AddUser(user);
+                return ToJson(result?HttpResult.Success:HttpResult.Fail,message:result?"添加成功":"添加失败");
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        /// <summary>
+        /// 修改用户
+        /// </summary>
+        /// <param name="user">用户</param>
+        /// <returns></returns>
+        [HttpPut("modifyuser")]
+        public IActionResult ModifyUsers(User user)
+        {
+            try
+            {
+                var result = _userRepository.ModifyUser(user);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "修改成功" : "修改失败");
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        [HttpDelete("removeuser")]
+        public IActionResult RemoveUsers(int userID)
+        {
+            try
+            {
+                var result = _userRepository.RemoveUser(userID);
+                return ToJson(result ? HttpResult.Success : HttpResult.Fail, message: result ? "删除成功" : "删除失败");
+            }
+            catch (Exception exc)
+            {
+                return new JsonResult(new { result = 0, message = exc.Message }, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ContractResolver = new LowercaseContractResolver()
+                });
+            }
+        }
         #endregion
         #region 角色
         public IActionResult RoleIndex()
